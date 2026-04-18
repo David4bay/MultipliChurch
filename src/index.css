@@ -1,0 +1,30 @@
+*,*::before,*::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    padding: 1rem;
+}
+
+input {
+    display: flex;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    align-items: stretch;
+    width: 100%;
+    max-width: 500px;
+
+    &:focus {
+        outline: none;
+        border-color: #000080;
+    }
+}

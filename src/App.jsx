@@ -2,9 +2,7 @@ import Auth from "./components/Auth";
 
 
 function App() {
-    return (
-        <Auth />
-    )
+        return <Auth />
 }
 
 export default App;
