@@ -1,22 +1,18 @@
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+
+// function decodeToken(token) {
+//     try { return JSON.parse(atob(token.split(".")[1])) } catch { return null }
+// }
 
 function DashboardNav(props) {
 
-    let { token } = props
+    let { setToken } = props
 
-    const navigate = useNavigate()
+    // if (!token) return <Navigate to="/" replace />
 
-    useEffect(() => {
-        if (token === null) {
-            navigate("/", { replace: true })
-        }
-    })
+    // const decoded = decodeToken(token)
 
-    async function handleLogout() {
-        localStorage.jwtSession = null 
-        window.location.reload()
-    }
+    // if (decoded === null) return <Navigate to="/" replace />
 
     return (
             <nav className="user__nav">
@@ -32,7 +28,7 @@ function DashboardNav(props) {
                     <li>
                         <button
                         type="button"
-                        onClick={handleLogout}
+                        onClick={() => setToken(null)}
                         className="nav__logout"
                         >
                             Logout

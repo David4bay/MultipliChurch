@@ -4,6 +4,10 @@ import { Navigate } from "react-router-dom"
 import { useChurches, useCreateChurch, useUpdateChurch, useDeleteChurch } from "../../hooks/useChurches"
 import { useMembers, useAddMember, useRemoveMember } from "../../hooks/useMembers"
 
+function decodeToken(token) {
+    try { return JSON.parse(atob(token.split(".")[1])) } catch { return null }
+}
+
 function AdminView({ token }) {
     const [selectedChurchId, setSelectedChurchId] = useState(null)
     const [churchName, setChurchName] = useState("")
@@ -47,8 +51,11 @@ function AdminView({ token }) {
     if (isLoading) return <p>Loading churches...</p>
     if (isError) return <p>Failed to load churches.</p>
 
+    const decoded = decodeToken(token)
+
     return (
-        <section>
+        <section className="dashboard">
+            <h1 className="user__title">{decoded?.username}'s Dashboard</h1>
             <h2>My Churches</h2>
 
             {/* Create church */}
@@ -79,15 +86,21 @@ function AdminView({ token }) {
 
             <ul>
                 {churches?.map((church) => (
-                    <li key={church.id}>
+                    <li 
+                    key={church.id}
+                    className="church__list"
+                    >
                         <span
                             style={{ cursor: "pointer", fontWeight: selectedChurchId === church.id ? "bold" : "normal" }}
                             onClick={() => setSelectedChurchId(church.id)}
+                            className="church__list-item"
                         >
                             {church.name} ({church.total_members} members)
+                            <div className="church__list-buttons">
+                                <button onClick={() => setEditingChurch({ id: church.id, name: church.name })}>Edit</button>
+                                <button onClick={() => deleteChurch.mutate(church.id)}>Delete</button>
+                            </div>
                         </span>
-                        <button onClick={() => setEditingChurch({ id: church.id, name: church.name })}>Edit</button>
-                        <button onClick={() => deleteChurch.mutate(church.id)}>Delete</button>
                     </li>
                 ))}
             </ul>

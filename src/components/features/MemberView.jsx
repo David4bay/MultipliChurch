@@ -34,8 +34,11 @@ function MemberView({ token }) {
                                     key={church.id}
                                     onClick={() => setSelectedChurchId(church.id)}
                                     style={{ cursor: "pointer", fontWeight: selectedChurchId === church.id ? "bold" : "normal" }}
+                                    className="church__list"
                                 >
-                                    {church.name} — {church.total_members} members
+                                    <span 
+                                    className="church__list-item"
+                                    >{church.name} — {church.total_members} members</span>
                                 </li>
                             ))}
                             {

@@ -3,14 +3,16 @@ import AdminView from "./features/AdminView"
 import MemberView from "./features/MemberView"
 import DashboardNav from "./features/DashboardNav"
 import "../User.css"
+import React, { useState } from "react"
 
 function decodeToken(token) {
     try { return JSON.parse(atob(token.split(".")[1])) } catch { return null }
 }
 
 function Dashboard() {
-    const session = localStorage.getItem("jwtSession")
-    const token = session ? JSON.parse(session)?.token : null
+    const [token, setToken] = useState(() => {
+        return localStorage.getItem("jwtSession") ? JSON.parse(localStorage.getItem("jwtSession"))?.token : null
+    })
 
     if (!token) return <Navigate to="/" replace />
 
@@ -18,13 +20,13 @@ function Dashboard() {
     const isAdmin = decoded?.role === "admin"
 
     return (
-        <div>
-            <DashboardNav token={token} />
+        <React.Suspense fallback={<p>Loading...</p>}>
+            <DashboardNav token={token} setToken={setToken} />
             {isAdmin
                 ? <AdminView token={token} />
                 : <MemberView token={token} />
             }
-        </div>
+        </React.Suspense>
     )
 }
 
