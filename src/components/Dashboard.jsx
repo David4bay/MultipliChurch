@@ -18,13 +18,13 @@ function Dashboard() {
     const isAdmin = decoded?.role === "admin"
 
     return (
-        <main>
+        <div>
             <DashboardNav token={token} />
             {isAdmin
                 ? <AdminView token={token} />
                 : <MemberView token={token} />
             }
-        </main>
+        </div>
     )
 }
 

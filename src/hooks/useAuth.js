@@ -30,16 +30,16 @@ export function useLogin() {
 
 export function useSignup() {
     const navigate = useNavigate()
-    
+
     return useMutation({
         mutationFn: signupUser,
+        onError: (err) => {
+            console.error("Signup error:", err.message)
+        },
         onSuccess: (data) => {
             localStorage.setItem("jwtSession", JSON.stringify(data))
             decoded = decodeToken(data.token)
             navigate(decoded?.role === "admin" ? "/admin" : "/user", { replace: true })
-        },
-        onError: (err) => {
-            console.error("Signup error:", err.message)
         }
     })
 }

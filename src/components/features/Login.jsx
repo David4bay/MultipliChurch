@@ -20,7 +20,7 @@ function Login({ login }) {
                     type="text"
                     placeholder="Username"
                     name="username"
-                    minLength={6}
+                    minLength={4}
                     autoComplete="username"
                     required
                 />
@@ -28,7 +28,7 @@ function Login({ login }) {
                     type="password"
                     placeholder="Password"
                     name="password"
-                    minLength={8}
+                    minLength={5}
                     autoComplete="current-password"
                     required
                 />
