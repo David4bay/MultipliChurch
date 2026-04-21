@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Navigate } from "react-router-dom"
 import { useChurches } from "../../hooks/useChurches"
-import { useMembers } from "../../hooks/useMembers"
+import { useAddMember, useMembers } from "../../hooks/useMembers"
 import { useState } from "react"
 
 function decodeToken(token) {
@@ -9,17 +9,35 @@ function decodeToken(token) {
 }
 
 function MemberView({ token }) {
-    const [selectedChurchId, setSelectedChurchId] = useState(null)
-
+    
     if (!token) return <Navigate to="/" replace />
-
+    
     const decoded = decodeToken(token)
 
     // Admins have their own view
     if (decoded?.role === "admin") return null
-
-    const { data: churches, isLoading } = useChurches()
+    
+    const { data: churches, isLoading, refetch } = useChurches()
+    const [selectedChurchId, setSelectedChurchId] = useState(null)
     const { data: members } = useMembers(selectedChurchId)
+    const addMember = useAddMember()
+
+    console.log("churches", churches, "members", members)
+    
+    
+    function handleAddMember(churchId) {
+        if (!churchId) return 
+        console.log("add member run")
+        addMember.mutate({ churchId, user_id: decoded.id}, {
+            onSuccess: () => {
+                console.log("member user added.")
+                refetch()
+                // refetchMembers()
+            },
+            onError: () => console.log("failed to add member user.")
+        })
+        setSelectedChurchId(churchId)
+    }
 
     return (
         <section className="dashboard">
@@ -32,13 +50,17 @@ function MemberView({ token }) {
                             {churches?.map((church) => (
                                 <li
                                     key={church.id}
-                                    onClick={() => setSelectedChurchId(church.id)}
                                     style={{ cursor: "pointer", fontWeight: selectedChurchId === church.id ? "bold" : "normal" }}
                                     className="church__list"
-                                >
+                                    >
                                     <span 
                                     className="church__list-item"
-                                    >{church.name} — {church.total_members} members</span>
+                                    >{church.name} — {church.total_members} members 
+                                    <button
+                                    type="button"
+                                    onClick={() => handleAddMember(church.id)}
+                                    >join</button>
+                                    </span>
                                 </li>
                             ))}
                             {
@@ -49,14 +71,19 @@ function MemberView({ token }) {
                         </ul>
                     )}
                 </article>
-                <article className="dashboard__article">
-                    <h2>Members {selectedChurchId ? `of Church #${selectedChurchId}` : ""}</h2>
-                    <ul>
-                        {members?.map((member) => (
-                            <li key={member.id}>{member.name}</li>
-                        ))}
-                    </ul>
-                </article>
+                {
+                    selectedChurchId ? (
+                        <article className="dashboard__article">
+                            <h2>Members {selectedChurchId ? `of Church #${selectedChurchId}` : ""}</h2>
+                            <ul>
+                                {members?.map((member) => (
+                                    <li key={member.id}>{member.username}</li>
+                                ))}
+                            </ul>
+                        </article>
+                    ) : null
+                }
+                
             </div>
         </section>
     )

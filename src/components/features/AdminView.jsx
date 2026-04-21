@@ -43,7 +43,7 @@ function AdminView({ token }) {
     function handleAddMember(e) {
         e.preventDefault()
         if (!memberName.trim() || !selectedChurchId) return
-        addMember.mutate({ churchId: selectedChurchId, name: memberName }, {
+        addMember.mutate({ churchId: selectedChurchId, user_id: memberName }, {
             onSuccess: () => setMemberName("")
         })
     }

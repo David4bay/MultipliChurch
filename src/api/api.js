@@ -68,12 +68,14 @@ export const fetchMembers = (churchId) =>
 export const fetchMemberById = ({ churchId, id }) =>
     fetch(`${BASE_URL}/churches/${churchId}/members/${id}`, { headers: authHeaders() }).then(handleResponse)
 
-export const postMember = ({ churchId, ...body }) =>
+export const postMember = ({ churchId, ...body }) => {
+    JSON.stringify("body from postMember", body)
     fetch(`${BASE_URL}/churches/${churchId}/members`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify(body)
     }).then(handleResponse)
+}
 
 export const putMember = ({ churchId, id, ...body }) =>
     fetch(`${BASE_URL}/churches/${churchId}/members/${id}`, {
