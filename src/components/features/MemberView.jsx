@@ -5,7 +5,11 @@ import { useAddMember, useMembers } from "../../hooks/useMembers"
 import { useState } from "react"
 
 function decodeToken(token) {
-    try { return JSON.parse(atob(token.split(".")[1])) } catch { return null }
+    try { 
+        return JSON.parse(atob(token.split(".")[1])) 
+    } catch { 
+        return null 
+    }
 }
 
 function MemberView({ token }) {
@@ -24,7 +28,6 @@ function MemberView({ token }) {
 
     console.log("churches", churches, "members", members)
     
-    
     function handleAddMember(churchId) {
         if (!churchId) return 
         console.log("add member run")
@@ -32,7 +35,6 @@ function MemberView({ token }) {
             onSuccess: () => {
                 console.log("member user added.")
                 refetch()
-                // refetchMembers()
             },
             onError: () => console.log("failed to add member user.")
         })
